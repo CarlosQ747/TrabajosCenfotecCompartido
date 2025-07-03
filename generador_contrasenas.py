@@ -1,45 +1,38 @@
 import random
 import string
 
-def generar_contrasena(longitud, usar_especiales=True, evitar_ambiguos=True):
+"""Genera una contraseña segura con la longitud especificada.
+Args:
+longitud (int): Longitud deseada de la contraseña.
+Returns:
+str: Contraseña generada.
+"""
+def generar_contrasena(longitud):
     if longitud < 8:
         raise ValueError("La longitud mínima de la contraseña es 8 caracteres.")
+    caracteres_mayusculas = string.ascii_uppercase
+    caracteres_minusculas = string.ascii_lowercase
+    caracteres_digitos = string.digits
+    caracteres_especiales = string.punctuation
 
-    # Caracteres base
-    caracteres = string.ascii_uppercase + string.ascii_lowercase + string.digits
-    
-    if usar_especiales:
-        caracteres += string.punctuation
+    todos_caracteres = caracteres_mayusculas + caracteres_minusculas + caracteres_digitos + caracteres_especiales
 
-    if evitar_ambiguos:
-        caracteres_ambiguos = "O0oIl1|"
-        caracteres = ''.join(c for c in caracteres if c not in caracteres_ambiguos)
-
-    # Asegurar al menos un carácter de cada tipo
-    seleccion = [
-        random.choice(string.ascii_uppercase),
-        random.choice(string.ascii_lowercase),
-        random.choice(string.digits)
+    contrasena = [
+        random.choice(caracteres_mayusculas),
+        random.choice(caracteres_minusculas),
+        random.choice(caracteres_digitos),
+        random.choice(caracteres_especiales)
     ]
-    if usar_especiales:
-        seleccion.append(random.choice(string.punctuation))
 
-    while len(seleccion) < longitud:
-        seleccion.append(random.choice(caracteres))
+    contrasena += [random.choice(todos_caracteres) for _ in range(longitud- 4)]
 
-    random.shuffle(seleccion)
-    return ''.join(seleccion)
+    random.shuffle(contrasena)
+    return ''.join(contrasena)
 
-# Menú de prueba interactivo
-if __name__ == "__main__":
+if  name  == " main ":
+    longitud = int(input("Ingrese la longitud deseada para la contraseña (mínimo 8 caracteres): "))
     try:
-        print("\n Generador de Contraseñas Personalizado\n")
-        longitud = int(input(" Longitud deseada (mínimo 8): "))
-        usar_especiales = input("¿Incluir caracteres especiales? (s/n): ").lower() == 's'
-        evitar_ambiguos = input("¿Evitar caracteres ambiguos como 'O', '0', 'l'? (s/n): ").lower() == 's'
+        print("Contraseña generada:", generar_contrasena(longitud))
+    except ValueError as e:\
+        print(e)
 
-        contrasena = generar_contrasena(longitud, usar_especiales, evitar_ambiguos)
-        print(f"\n Contraseña generada:\n{contrasena}\n")
-
-    except ValueError as e:
-        print(f" Error: {e}")
